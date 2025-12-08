@@ -19,7 +19,14 @@ int main(int c,char *argv[])
        printf("Encoding selected !\n");
        if(read_valid_enc_args(argv,&e)==e_suc)
        {
-         printf("INFO : Read and validation of encode arguments is done successfully!\n");
+         printf("Read and validation of encode arguments is done successfully!\n");
+         if(do_encoding(&e)==e_suc)
+         printf("Encoding is success\n");
+         else
+         { 
+            printf("Failed to encode\n");
+            return 1;
+         }
        }
        else
        {
