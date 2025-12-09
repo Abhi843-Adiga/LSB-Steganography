@@ -81,16 +81,44 @@ status check_capacity(enco *en)
     return e_fail;
 }
 
+
 status copy_bmp_header(enco *en)
 {
     fseek(en->src_img_fptr,14,SEEK_SET);
     uint s;
     fread(&s,sizeof(int),1,en->src_img_fptr);
     printf("Info Header Size: %u\n",s);
-    char str[s+14];
+    en->header_size=s+14;
+    char st[en->header_size];
     rewind(en->src_img_fptr);
-    fread(str,s+14,1,en->src_img_fptr);
-    fwrite(str,s+14,1,en->steg_img_fptr);
+    fread(st,en->header_size,1,en->src_img_fptr);
+    fwrite(st,en->header_size,1,en->steg_img_fptr);
+    return e_suc;
+}
+
+status encode_byte_to_lsb(char sym,char *str)
+{
+    for(int i=0;i<strlen(str);i++)
+    str[i]=(str[i] & 0xFE) | ((sym>>i) & 1);
+    return e_suc;
+}
+
+status encode_data_to_image(enco *en,char *data,int si)
+{
+    fseek(en->src_img_fptr,en->header_size,SEEK_SET);
+    fseek(en->steg_img_fptr,en->header_size,SEEK_SET);
+    for(int i=0;i<si;i++)
+    {
+        fread(en->str,8,1,en->src_img_fptr);
+        encode_byte_to_lsb(data[i],en->str);
+        fwrite(en->str,8,1,en->steg_img_fptr);
+    }
+   return e_suc;
+}
+
+status encode_magic_string(enco *en,char *m_s)
+{
+    encode_data_to_image(en,m_s,strlen(m_s));
     return e_suc;
 }
 
@@ -105,6 +133,13 @@ status do_encoding(enco *en)
             if(copy_bmp_header(en)==e_suc)
             {
                 printf("Copied BMP header successfully\n");
+                if(encode_magic_string(en,M_S)==e_suc)
+                printf("Magic string is encoded successfully\n");
+                else
+                {
+                    printf("Magic string encoding failure\n");
+                    return e_fail;
+                }
             }
             else
             {
