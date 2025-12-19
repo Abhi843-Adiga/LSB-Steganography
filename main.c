@@ -1,10 +1,12 @@
 #include<stdio.h>
 #include "type.h"
 #include "enc.h"
+#include "dec.h"
 #include<string.h>
 int main(int c,char *argv[])
 {
     enco e;
+    dec d;
     if(c<3)
     {
         printf("ERROR : Please provide the correct arguments\n");
@@ -37,6 +39,23 @@ int main(int c,char *argv[])
     else if(cho==e_dec)
     {
         printf("Decoding selected !\n");
+        if(read_and_validate_decode_args(argv,&d)==e_suc)
+        {
+            printf("Read and validation of decode arguments is successfull\n");
+            printf("Start decoding\n");
+            if(do_decoding(&d)==e_suc)
+            printf("Decoding is successfull");
+            else
+            {
+                printf("Decoding is unsuccessfull\n");
+                return 1;
+            }
+        }
+        else
+        {
+            printf("read and validate of decode arguments is unsuccessfull\n");
+            return 1;
+        }
     }
     else if(cho==e_unsup)
     {

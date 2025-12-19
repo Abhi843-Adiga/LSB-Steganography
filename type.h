@@ -1,6 +1,6 @@
 #ifndef TYPE_H
 #define TYPE_H
-
+#define M_S "#*"
 typedef unsigned int uint;
 
 typedef enum{
