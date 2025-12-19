@@ -13,6 +13,7 @@ typedef struct Encoding_INFOs
     char *sec_txt_fname;
     FILE *sec_txt_fptr;
     long sec_txt_fsize;
+    char st[4];
     
     char *steg_img_fname;
     FILE *steg_img_fptr;
@@ -39,5 +40,17 @@ status encode_magic_string(enco *en,char *m_s);
 status encode_data_to_image(enco *en,char *m_s,int data);
 
 status encode_byte_to_lsb(char sym,char *str);
+
+status encode_ext_size(enco *en,uint size);
+
+status size_to_lsb(enco *en,uint size);
+
+status encode_ext(enco *en,char *str);
+
+status encode_file_size(enco *en,uint size);
+
+status encode_file_data(enco *en);
+
+status copy_remaining_data(enco *en);
 
 #endif

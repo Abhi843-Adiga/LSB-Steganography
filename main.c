@@ -5,7 +5,7 @@
 int main(int c,char *argv[])
 {
     enco e;
-    if(c<4)
+    if(c<3)
     {
         printf("ERROR : Please provide the correct arguments\n");
         printf("USAGE : %s arg1 arg2 arg3 ..\n",argv[0]);
