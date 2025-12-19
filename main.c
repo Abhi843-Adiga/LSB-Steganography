@@ -44,7 +44,7 @@ int main(int c,char *argv[])
             printf("Read and validation of decode arguments is successfull\n");
             printf("Start decoding\n");
             if(do_decoding(&d)==e_suc)
-            printf("Decoding is successfull");
+            printf("Decoding is successfull\n");
             else
             {
                 printf("Decoding is unsuccessfull\n");
