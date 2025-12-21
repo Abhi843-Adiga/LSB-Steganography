@@ -74,6 +74,54 @@ status decode_magic_string(dec *d,char *str)
     return data_to_image(d,str);
 }
 
+uint decode_size_to_lsb(dec *d)
+{
+    uint in=0;
+    unsigned char rid;
+    for(int i=0;i<32;i++)
+    {
+        fread(&rid,1,1,d->steg_img_fptr);
+        in=in | ((rid & 1) <<i);
+    }
+    return in;
+}
+
+status decode_ext_size(dec *d,uint size)
+{
+    uint i=decode_size_to_lsb(d);
+    if(i==size)
+    {
+         return e_suc;
+    }
+    else
+    {
+        printf("%u",i);
+        return e_fail;
+    }
+}
+
+status decode_extn_data(dec *d,char *str)
+{
+    return data_to_image(d,str);
+}
+
+status decode_data_size(dec *d)
+{
+    d->c=decode_size_to_lsb(d);
+    return e_suc;
+}
+
+status decode_data(dec *d)
+{
+    char ch;
+    for(int i=0;i<d->c;i++)
+    {
+        ch=byte_to_lsb(d);
+        fwrite(&ch,1,1,d->out_txt_fptr);
+    }
+    return e_suc;
+}
+
 status do_decoding(dec *d)
 {
     if(open_files(d)==e_suc)
@@ -85,7 +133,7 @@ status do_decoding(dec *d)
             if(decode_magic_string(d,M_S)==e_suc)
             {
                 printf("Decoded Magic string successfully\n");
-               /* strcpy(d->str,strstr(d->out_txt_fname,"."));
+               strcpy(d->str,strstr(d->out_txt_fname,"."));
                 if(decode_ext_size(d,strlen(d->str))==e_suc)
                 {
                     printf("Decoded extension size\n");
@@ -121,7 +169,7 @@ status do_decoding(dec *d)
                 {
                     printf("Decode of extn size failure\n");
                     return e_fail;
-                }*/
+                }
             }
             else
             {

@@ -8,6 +8,7 @@ typedef struct DECODE_INFORMATION
    FILE *steg_img_fptr;
    uint header_size;
    char str[4];
+   uint c;
 
    char *out_txt_fname;
    FILE *out_txt_fptr;
@@ -29,7 +30,7 @@ char byte_to_lsb(dec *d);
 
 status decode_ext_size(dec *d,uint size);
 
-uint decode_size_to_lsb(dec *d,uint size);
+uint decode_size_to_lsb(dec *d);
 
 status decode_extn_data(dec *d,char *str);
 
