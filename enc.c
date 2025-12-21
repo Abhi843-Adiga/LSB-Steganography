@@ -9,7 +9,7 @@ status read_valid_enc_args(char *argv[],enco *enc)
     enc->src_img_fname=argv[2];
     else
     {
-        printf("Invalid file extension !\n");
+        printf("ERROR: Invalid file extension !\n");
         return e_fail;
     }
     
@@ -17,7 +17,7 @@ status read_valid_enc_args(char *argv[],enco *enc)
     enc->sec_txt_fname=argv[3];
     else
     {
-        printf("Invalid file extension !\n");
+        printf("ERROR: Invalid file extension !\n");
         return e_fail;
     }
 
@@ -34,21 +34,21 @@ status check_open(enco *en)
     en->src_img_fptr=fopen(en->src_img_fname,"rb");
     if(en->src_img_fptr==NULL)
     {
-        printf("File unable to open\n");
+        printf("ERROR: File unable to open\n");
         return e_fail;
     }
 
     en->sec_txt_fptr=fopen(en->sec_txt_fname,"r");
     if(en->sec_txt_fptr==NULL)
     {
-        printf("File unable to open\n");
+        printf("ERROR: File unable to open\n");
         return e_fail;
     }
 
     en->steg_img_fptr=fopen(en->steg_img_fname,"wb");
     if(en->steg_img_fptr==NULL)
     {
-        printf("File unable to open\n");
+        printf("ERROR: File unable to open\n");
         return e_fail;
     }
     return e_suc;
@@ -167,83 +167,92 @@ status copy_remaining_data(enco *en)
 
 status do_encoding(enco *en)
 {
+    printf("Checking required files can open...\n");
+    sleep(2);
     if(check_open(en)==e_suc)
     {
-        printf("FILE OPENED SUCCESSFULLY\n");
+        printf("INFO: FILE OPENED SUCCESSFULLY\n");
+        printf("Checking image can hold the secret file data...\n");
+        sleep(2);
         if(check_capacity(en)==e_suc)
         {
-            printf("Capacity checked successfully\n");
+            printf("INFO: Capacity checked successfully\n");
+            printf("Copying the BMP Header...\n");
+            sleep(2);
             if(copy_bmp_header(en)==e_suc)
             {
-                printf("Copied BMP header successfully\n");
+                printf("INFO: Copied BMP header successfully\n");
+                printf("ENCODING START...\n");
+                sleep(3);
                 if(encode_magic_string(en,M_S)==e_suc)
                 {
-                    printf("Magic string is encoded successfully\n");
+                    printf("INFO: Magic string is encoded successfully\n");
                     strcpy(en->st,strstr(en->sec_txt_fname,"."));
                     if(encode_ext_size(en,strlen(en->st))==e_suc)
                     {
-                        printf("Extension size encoded successfully\n");
+                        printf("INFO: Extension size encoded successfully\n");
                         if(encode_ext(en,en->st)==e_suc)
                         {
-                            printf("Extension data encoded successfully\n");
+                            printf("INFO: Extension data encoded successfully\n");
                             if(encode_file_size(en,en->sec_txt_fsize)==e_suc)
                             {
-                                printf("Encoded secret file size successfully\n");
+                                printf("INFO: Encoded secret file size successfully\n");
                                 if(encode_file_data(en)==e_suc)
                                 {
-                                   printf("Encoded secret file successfully\n");
+                                   printf("INFO: Encoded secret file successfully\n");
                                    if(copy_remaining_data(en)==e_suc)
-                                   printf("copied remaining data successfully\n");
+                                   {printf("INFO: Copied remaining data successfully\n");
+                                    sleep(2);}
                                    else{
-                                    printf("Copy of remaining data failure\n");
+                                    printf("ERROR: Copy of remaining data failure\n");
                                     return e_fail;
                                    }
                                 } 
                                 else
                                 {
-                                    printf("Encoding of secret file failure\n");
+                                    printf("ERROR: Encoding of secret file failure\n");
                                     return e_fail;
                                 }
                             }
                             else
                             {
-                                printf("Secret file size encoding failure\n");
+                                printf("ERROR: Secret file size encoding failure\n");
                                 return e_fail;
                             }
                         }
                         else
                         {
-                            printf("Extension data encoding failure\n");
+                            printf("ERROR: Extension data encoding failure\n");
                             return e_fail;
                         }
                     }
                     else
                     {
-                        printf("Extension size encode failure\n");
+                        printf("ERROR:Extension size encode failure\n");
                         return e_fail;
                     }
                 }
                 else
                 {
-                    printf("Magic string encoding failure\n");
+                    printf("ERROR:Magic string encoding failure\n");
                     return e_fail;
                 }
             }
             else
             {
-                printf("Failed to copy BMP header\n");
+                printf("ERROR: Failed to copy BMP header\n");
                 return e_fail;
             }
         }
         else
         {
-            printf("Failed to check capacity\n");
+            printf("ERROR: Failed to check capacity\n");
             return e_fail;
         }
     }
     else
     {
-        printf("Failed to open the file\n");
+        printf("ERROR: Failed to open the file\n");
         return e_fail;
     }
     return e_suc;

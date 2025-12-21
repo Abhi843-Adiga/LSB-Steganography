@@ -18,15 +18,20 @@ int main(int c,char *argv[])
 
     if(cho==e_enc)
     {
-       printf("Encoding selected !\n");
+        printf("Encoding is selected!\n");
+        sleep(2);
+        printf("Checking read and validate encode args...\n");
+        sleep(2);
        if(read_valid_enc_args(argv,&e)==e_suc)
        {
-         printf("Read and validation of encode arguments is done successfully!\n");
+         printf("INFO: Read and validation of encode arguments is done successfully!\n");
+         printf("STARTING ENCODING...\n");
+         sleep(2);
          if(do_encoding(&e)==e_suc)
          printf("Encoding is success\n");
          else
          { 
-            printf("Failed to encode\n");
+            printf("ERROR: Failed to encode\n");
             return 1;
          }
        }
@@ -38,22 +43,26 @@ int main(int c,char *argv[])
     }
     else if(cho==e_dec)
     {
-        printf("Decoding selected !\n");
+        printf("Decoding is selected!\n");
+        sleep(2);
+        printf("Checking read and validate decode args...\n");
+        sleep(2);
         if(read_and_validate_decode_args(argv,&d)==e_suc)
         {
-            printf("Read and validation of decode arguments is successfull\n");
-            printf("Start decoding\n");
+            printf("INFO: Read and validation of decode arguments is successfull\n");
+            printf("STARTING DECODING...\n");
+            sleep(2);
             if(do_decoding(&d)==e_suc)
             printf("Decoding is successfull\n");
             else
             {
-                printf("Decoding is unsuccessfull\n");
+                printf("ERROR: Decoding is unsuccessfull\n");
                 return 1;
             }
         }
         else
         {
-            printf("read and validate of decode arguments is unsuccessfull\n");
+            printf("ERROR: Read and validate of decode arguments is unsuccessfull\n");
             return 1;
         }
     }

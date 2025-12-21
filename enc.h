@@ -1,7 +1,7 @@
 #ifndef ENC_H
 #define ENC_H
 #include "type.h"
-
+#include<unistd.h>
 typedef struct Encoding_INFOs
 {
     char *src_img_fname;

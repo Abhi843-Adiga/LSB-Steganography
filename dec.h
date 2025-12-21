@@ -1,7 +1,7 @@
 #ifndef DEC_H
 #define DEC_H
 #include "type.h"
-#include<stdio.h>
+#include<unistd.h>
 typedef struct DECODE_INFORMATION
 {
    char *steg_img_fname;

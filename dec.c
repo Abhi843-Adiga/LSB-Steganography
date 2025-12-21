@@ -9,7 +9,7 @@ status read_and_validate_decode_args(char *argv[],dec *d)
     d->steg_img_fname=argv[2];
     else
     {
-        printf("Invalid file extension\n");
+        printf("ERROR: Invalid file extension\n");
         return e_fail;
     }
 
@@ -124,68 +124,74 @@ status decode_data(dec *d)
 
 status do_decoding(dec *d)
 {
+    printf("Checking required files can open...\n");
+    sleep(2);
     if(open_files(d)==e_suc)
     {
-        printf("Files opened successfully\n");
+        printf("INFO: Files opened successfully\n");
+        printf("Skipping BMP Header...\n");
+        sleep(2);
         if(skip_bmp_header(d)==e_suc)
         {
-            printf("Skipped bmp header successfully\n");
+            printf("INFO: Skipped bmp header successfully\n");
+            printf("DECODING START..\n");
+            sleep(2);
             if(decode_magic_string(d,M_S)==e_suc)
             {
-                printf("Decoded Magic string successfully\n");
+                printf("INFO: Decoded Magic string successfully\n");
                strcpy(d->str,strstr(d->out_txt_fname,"."));
                 if(decode_ext_size(d,strlen(d->str))==e_suc)
                 {
-                    printf("Decoded extension size\n");
+                    printf("INFO: Decoded extension size\n");
                     if(decode_extn_data(d,d->str)==e_suc)
                     {
-                        printf("Decoded extn data successfully\n");
+                        printf("INFO: Decoded extn data successfully\n");
                         if(decode_data_size(d)==e_suc)
                         {
-                            printf("Decoded data size successfully\n");
+                            printf("INFO: Decoded data size successfully\n");
                             if(decode_data(d)==e_suc)
                             {
-                                printf("Decoded secret data successfully\n");
+                                printf("INFO: Decoded secret data successfully\n");
                             }
                             else
                             {
-                                printf("Failed to decode secret data\n");
+                                printf("ERROR: Failed to decode secret data\n");
                                 return e_fail;
                             }
                         }
                         else
                         {
-                            printf("Decode of data size failure\n");
+                            printf("ERROR: Decode of data size failure\n");
                             return e_fail;
                         }
                     }
                     else
                     {
-                        printf("Decode of extn data failure\n");
+                        printf("ERROR: Decode of extn data failure\n");
                         return e_fail;
                     }
                 }
                 else
                 {
-                    printf("Decode of extn size failure\n");
+                    printf("ERROR: Decode of extn size failure\n");
                     return e_fail;
                 }
             }
             else
             {
-                printf("Decoding of magic_string failure\n");
+                printf("ERROR: Decoding of magic_string failure\n");
                 return e_fail;
             }
         }
         else
         {
-            printf(" Failed to Skip bmp header\n");
+            printf("ERROR: Failed to Skip bmp header\n");
             return e_fail;
         }
     }
     else
     {
-        printf("Files open unsuccessfull\n");
+        printf("ERROR: Files open unsuccessfull\n");
         return e_fail;
     }
     return e_suc;
