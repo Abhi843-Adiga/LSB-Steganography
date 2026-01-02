@@ -13,7 +13,8 @@ FEATURES:
 2.Automatically assigns the default file name if not provided.     
 3.Uses a Magic String to identify valid stego images.      
 4.Can encode any type of file at the algorithm level.      
-5.Encoding and Decoding is demonstrated using text files.      
+5.Encoding and Decoding is demonstrated using text files.
+6.Uses Makefile to automate build process.        
 
 USAGE:
 
